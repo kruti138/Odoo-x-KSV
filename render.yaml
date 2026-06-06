@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: vendorbridge-backend
+    env: node
+    branch: main
+    region: oregon
+    plan: starter
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: JWT_SECRET
+      - key: CORS_ORIGINS
+      - key: USE_MEMORY_DB
+      - key: SMTP_HOST
+      - key: SMTP_PORT
+      - key: SMTP_USER
+      - key: SMTP_PASS
