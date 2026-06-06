@@ -148,7 +148,11 @@ function Shell({ user, onLogout }) {
   useEffect(() => { load().catch((err) => setToast(err.message)); }, []);
   useEffect(() => {
     if (!userMenuOpen) return undefined;
-    const closeMenu = () => setUserMenuOpen(false);
+    const closeMenu = (e) => {
+      if (!e.target.closest(".user-menu")) {
+        setUserMenuOpen(false);
+      }
+    };
     document.addEventListener("mousedown", closeMenu);
     return () => document.removeEventListener("mousedown", closeMenu);
   }, [userMenuOpen]);
@@ -162,7 +166,6 @@ function Shell({ user, onLogout }) {
     <aside className={cx("sidebar", collapsed && "collapsed")}>
       <div className="side-logo"><Logo compact={collapsed} /></div>
       <nav>{navItems.map(([id, label, Icon]) => <button key={id} className={page === id ? "active" : ""} onClick={() => setPage(id)}><Icon /><span>{label}</span></button>)}</nav>
-      <div className="side-user"><span className="avatar">{initials(user.firstName + " " + user.lastName)}</span><div><strong>{user.role}</strong><small>{user.email}</small></div><ChevronDown size={16} /></div>
     </aside>
     <header className="topbar">
       <button className="icon-btn" onClick={() => setCollapsed(!collapsed)}>{collapsed ? <Menu /> : <PanelLeftClose />}</button>
