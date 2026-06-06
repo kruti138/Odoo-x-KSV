@@ -14,7 +14,13 @@ import {
 } from "recharts";
 import "./styles.css";
 
-const API = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+const API = (() => {
+  let url = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+  if (url && !url.endsWith("/api")) {
+    url = url.endsWith("/") ? `${url}api` : `${url}/api`;
+  }
+  return url;
+})();
 const roleNavigation = {
   "Procurement Officer": [
     ["dashboard", "Dashboard", LayoutDashboard], ["vendors", "Vendors", Users],

@@ -16,10 +16,17 @@ const JWT_SECRET = process.env.JWT_SECRET || "vendorbridge-demo-secret";
 const allowedOrigins = process.env.CORS_ORIGINS
   ? process.env.CORS_ORIGINS.split(",").map((origin) => origin.trim()).filter(Boolean)
   : [process.env.CLIENT_URL, "http://localhost:5173", "http://localhost:5174"].filter(Boolean);
-app.use(cors({ origin: (origin, callback) => {
-  if (!origin) return callback(null, true);
-  callback(null, allowedOrigins.includes(origin) ? origin : false);
-} }));
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    const isAllowed = allowedOrigins.includes(origin) ||
+                      origin.startsWith("http://localhost:") ||
+                      origin.startsWith("http://127.0.0.1:") ||
+                      /\.vercel\.app$/.test(origin);
+    callback(null, isAllowed ? origin : false);
+  },
+  credentials: true
+}));
 app.use(express.json({ limit: "5mb" }));
 app.use(morgan("dev"));
 
